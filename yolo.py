@@ -105,5 +105,57 @@ def download_result(filename):
     """下载结果文件"""
     return jsonify({'error': 'Not implemented'}), 501  # 需自行实现文件发送逻辑
 
+@app.route('/start_task', methods=['POST'])
+def start_task():
+    """接收并处理任务的接口"""
+    try:
+        # 解析请求数据
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'Invalid JSON data'}), 400
+
+        task_id = data.get('task_id')
+        command = data.get('command')
+        file_path = data.get('file_path')
+
+        # 验证必填字段
+        if not task_id or not command or not file_path:
+            return jsonify({'error': 'Missing required fields'}), 400
+
+        # 执行任务逻辑（此处仅为示例，实际逻辑需根据需求实现）
+        app.logger.info(f"Received task: ID={task_id}, Command={command}, FilePath={file_path}")
+
+        # 调用 YOLOV5 处理任务
+        result_filename = f"result_{task_id}_{Path(file_path).name}"
+        result_path = Path(RESULT_DIR) / result_filename
+
+        try:
+            # 执行 YOLO 检测命令
+            cmd = [
+                'python', str(DETECT_SCRIPT),
+                '--source', str(file_path),
+                '--weights', str(WEIGHTS_PATH),
+                '--project', str(RESULT_DIR),
+                '--name', str(task_id),
+                '--exist-ok'
+            ]
+            subprocess.run(cmd, check=True, capture_output=True, text=True)
+
+            # 直接返回结果文件路径
+            result = f"Task {task_id} processed successfully. Result saved at {result_path}"
+
+        except subprocess.CalledProcessError as e:
+            app.logger.error(f"YOLO processing failed for task {task_id}: {e.stderr}")
+            result = f"Task {task_id} processing failed: {e.stderr}"
+
+        return jsonify({
+            'status': 'success',
+            'message': result
+        }), 200
+
+    except Exception as e:
+        app.logger.error(f"Error processing task: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
