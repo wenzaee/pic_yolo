@@ -13,7 +13,10 @@ RESULT_DIR = './results'          # 处理结果保存路径
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 YOLOV5LITE_PATH = Path('yolov5lite')
 DETECT_SCRIPT = YOLOV5LITE_PATH / 'detect.py'
-WEIGHTS_PATH = YOLOV5LITE_PATH / 'weights' / 'v5lite-g.pt'
+
+# 从环境变量读取模型名称，默认为 'v5lite-g.pt'
+MODEL_NAME = os.getenv('YOLO_MODEL', 'v5lite-g.pt')
+WEIGHTS_PATH = YOLOV5LITE_PATH / 'weights' / MODEL_NAME
 
 # 创建必要目录
 Path(UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
@@ -158,4 +161,7 @@ def start_task():
         return jsonify({'error': 'Internal server error'}), 500
 
 if __name__ == '__main__':
+    # 增加日志输出，便于排查服务端问题
+    app.logger.info("Flask service started on http://localhost:5000")
+    app.logger.info("请确保服务端已启动，并监听正确的地址和端口")
     app.run(host='0.0.0.0', port=5000, debug=True)
