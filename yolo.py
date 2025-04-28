@@ -160,6 +160,14 @@ def start_task():
         app.logger.error(f"Error processing task: {str(e)}")
         return jsonify({'error': 'Internal server error'}), 500
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    """健康检查接口"""
+    return jsonify({
+        'status': 'ok',
+        'message': 'Flask service is running'
+    }), 200
+
 if __name__ == '__main__':
     # 增加日志输出，便于排查服务端问题
     app.logger.info("Flask service started on http://localhost:5000")
