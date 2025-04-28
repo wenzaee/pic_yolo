@@ -6,7 +6,7 @@ import json
 def test_start_task():
     try:
         # 定义测试数据
-        task_id = 'asda231sadasdasdaa'
+        task_id = 'pppdasdaa'
         command = 'asasdas'
         file_path = './uploads/'
         data = {
@@ -16,7 +16,7 @@ def test_start_task():
         }
 
         # 发送 POST 请求到 /start_task 接口
-        url = ' http://192.168.5.8:5000/start_task'
+        url = ' http://127.0.0.1:5000/start_task'
         response = requests.post(url, json=data)
 
         # 打印测试结果
