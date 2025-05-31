@@ -172,4 +172,4 @@ if __name__ == '__main__':
     # 增加日志输出，便于排查服务端问题
     app.logger.info("Flask service started on http://localhost:5000")
     app.logger.info("请确保服务端已启动，并监听正确的地址和端口")
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=6001, debug=True)

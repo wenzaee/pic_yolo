@@ -6,6 +6,6 @@ RUN apt-get update && apt-get install -y \
 COPY . /app
 # 卸载 opencv-python 并安装 opencv-python-headless
 #RUN pip install opencv-python-headless -i https://pypi.tuna.tsinghua.edu.cn/simple
-RUN pip install --no-cache-dir -r requirements.txt
-EXPOSE 8080
-CMD ["python", "worker.py"]
+RUN pip install  -r requirements.txt
+EXPOSE 6001
+CMD ["python", "yolo.py"]
